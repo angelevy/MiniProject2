@@ -2,6 +2,10 @@
     <string name="app_name">MiniProject2</string>
     <string name="list_kosong">Belum ada data resep</string>
     <string name="x_diklik">%1$s diklik!</string>
-    <string name="tambah_catatan">Tambah Resep</string>
+    <string name="tambah_resep">Tambah Resep</string>
     <string name="belum_bisa">Belum bisa tambah Resep.</string>
+    <string name="nama">Nama</string>
+    <string name="deskripsi">Deskripsi</string>
+    <string name="bahan">Bahan</string>
+    <string name="langkah">Langkah</string>
 </resources>
