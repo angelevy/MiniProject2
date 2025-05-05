@@ -33,15 +33,17 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.angellevyne0045.miniproject2.R
 import com.angellevyne0045.miniproject2.model.Resep
+import com.angellevyne0045.miniproject2.navigation.Screen
 import com.angellevyne0045.miniproject2.ui.theme.MIniProject2Theme
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen() {
-    val context = LocalContext.current
+fun MainScreen(navController: NavHostController) {
 
     Scaffold (
         topBar = {
@@ -58,12 +60,12 @@ fun MainScreen() {
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    Toast.makeText(context, R.string.belum_bisa, Toast.LENGTH_SHORT).show()
+                    navController.navigate(Screen.FormBaru.route)
                 }
             ) {
                 Icon(
                     imageVector = Icons.Filled.Add,
-                    contentDescription = stringResource(R.string.tambah_catatan),
+                    contentDescription = stringResource(R.string.tambah_resep),
                     tint = MaterialTheme.colorScheme.primary
                 )
             }
@@ -142,6 +144,6 @@ fun ListItem(resep: Resep, onClick: () -> Unit) {
 @Composable
 fun MainScreenPreview() {
     MIniProject2Theme {
-        MainScreen()
+        MainScreen(rememberNavController())
     }
 }
