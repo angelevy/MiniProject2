@@ -2,6 +2,8 @@ package com.angellevyne0045.miniproject2.ui.screen
 
 
 import android.content.res.Configuration
+import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,6 +21,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -53,7 +56,8 @@ fun MainScreen() {
 @Composable
 fun ScreenContent(modifier: Modifier = Modifier) {
     val viewModel: MainViewModel = viewModel()
-    val data = emptyList<Resep>()
+    val data = viewModel.data
+    val context = LocalContext.current
 
 
     if(data.isEmpty()) {
@@ -70,16 +74,20 @@ fun ScreenContent(modifier: Modifier = Modifier) {
             modifier = modifier.fillMaxSize()
         ){
             items(data) {
-                ListItem(resep = it)
+                ListItem(resep = it) {
+                    val pesan = context.getString(R.string.x_diklik, it.nama)
+                    Toast.makeText(context, pesan, Toast.LENGTH_SHORT).show()
+                }
                 HorizontalDivider()
             }
         }
     }
 }
 @Composable
-fun ListItem(resep: Resep) {
+fun ListItem(resep: Resep, onClick: () -> Unit) {
     Column(
         modifier = Modifier
+            .clickable { onClick() }
             .fillMaxWidth()
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -92,15 +100,19 @@ fun ListItem(resep: Resep) {
         )
         Text(
             text = resep.deskripsi,
-            maxLines = 2,
+            maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
         Text(
             text = resep.bahan,
-            maxLines = 2,
+            maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
-        Text(text = resep.langkah)
+        Text(
+            text = resep.langkah,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
     }
 }
 
