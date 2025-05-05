@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MiniProject2</string>
+    <string name="list_kosong">Belum ada data resep</string>
 </resources>
