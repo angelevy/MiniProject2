@@ -35,9 +35,11 @@ import androidx.navigation.compose.rememberNavController
 import com.angellevyne0045.miniproject2.R
 import com.angellevyne0045.miniproject2.ui.theme.MIniProject2Theme
 
+const val KEY_ID_RESEP  =  "idResep"
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailScreen(navController: NavHostController) {
+fun DetailScreen(navController: NavHostController, id: Long? = null) {
     var nama by remember { mutableStateOf("") }
     var deskripsi by remember { mutableStateOf("") }
     var bahan by remember { mutableStateOf("") }
@@ -56,7 +58,10 @@ fun DetailScreen(navController: NavHostController) {
                     }
                 },
                 title = {
+                    if (id == null)
                     Text(text = stringResource(R.string.tambah_resep))
+                    else
+                        Text(text = stringResource(R.string.edit_resep))
                 },
                 colors = TopAppBarDefaults.mediumTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
