@@ -1,11 +1,13 @@
 package com.angellevyne0045.miniproject2.database
 
+import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import com.angellevyne0045.miniproject2.model.Resep
 import kotlinx.coroutines.flow.Flow
 
+@Dao
 interface ResepDao {
 
     @Insert
