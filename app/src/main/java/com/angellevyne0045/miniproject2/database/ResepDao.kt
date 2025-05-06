@@ -21,4 +21,7 @@ interface ResepDao {
 
     @Query("SELECT * FROM resep WHERE id = :id")
     suspend fun getResepById(id: Long): Resep?
+
+    @Query("DELETE FROM resep WHERE id = :id")
+    suspend fun deleteById(id: Long)
 }
