@@ -56,6 +56,10 @@ class MainViewModel : ViewModel(){
             langkah = "1. Potong-potong buah sesuai selera.\n" +
                     "2. Campurkan buah dengan yogurt dan madu.\n" +
                     "3. Sajikan segera, atau simpan di kulkas terlebih dahulu."
+
         )
     )
+    fun getResep(id: Long): Resep? {
+        return data.find { it.id == id }
+    }
 }
