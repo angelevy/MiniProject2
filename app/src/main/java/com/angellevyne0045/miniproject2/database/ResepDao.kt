@@ -1,0 +1,19 @@
+package com.angellevyne0045.miniproject2.database
+
+import androidx.room.Insert
+import androidx.room.Query
+import androidx.room.Update
+import com.angellevyne0045.miniproject2.model.Resep
+import kotlinx.coroutines.flow.Flow
+
+interface ResepDao {
+
+    @Insert
+    suspend fun insert(resep: Resep)
+
+    @Update
+    suspend fun update(resep: Resep)
+
+    @Query("SELECT * FROM resep ORDER BY langkah DESC")
+    fun getResep(): Flow<List<Resep>>
+}
