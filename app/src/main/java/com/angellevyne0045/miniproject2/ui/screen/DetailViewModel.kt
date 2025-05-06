@@ -21,7 +21,21 @@ class DetailViewModel(private val dao: ResepDao) : ViewModel() {
             dao.insert(resep)
         }
     }
-    fun getResep(id: Long): Resep? {
-        return null
+    suspend fun getResep(id: Long): Resep? {
+        return dao.getResepById(id)
+    }
+
+    fun update(id: Long, nama: String, deskripsi: String, bahan: String, langkah: String) {
+        val resep = Resep(
+            id = id,
+            nama = nama,
+            deskripsi =  deskripsi,
+            bahan = bahan,
+            langkah = langkah
+        )
+
+        viewModelScope.launch(Dispatchers.IO) {
+            dao.update(resep)
+        }
     }
 }
