@@ -10,4 +10,5 @@
     <string name="kembali">Kembali</string>
     <string name="simpan">Simpan</string>
     <string name="edit_resep">Ubah Resep</string>
+    <string name="invalid">tidak boleh ada yang kosong.</string>
 </resources>
