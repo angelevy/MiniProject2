@@ -11,26 +11,29 @@ import androidx.navigation.navArgument
 import com.angellevyne0045.miniproject2.ui.screen.DetailScreen
 import com.angellevyne0045.miniproject2.ui.screen.KEY_ID_RESEP
 import com.angellevyne0045.miniproject2.ui.screen.MainScreen
+import com.angellevyne0045.miniproject2.ui.screen.RecycleBinScreen
 
 @Composable
-fun  SetupNavGraph(navController: NavHostController = rememberNavController()) {
+fun SetupNavGraph(navController: NavHostController = rememberNavController()) {
     NavHost(
         navController = navController,
         startDestination = Screen.Home.route
-    ){
+    ) {
         composable(route = Screen.Home.route) {
             MainScreen(navController)
         }
         composable(route = Screen.FormBaru.route) {
             DetailScreen(navController)
         }
+        composable(Screen.RecycleBin.route) {
+            RecycleBinScreen(navController)
+        }
         composable(
             route = Screen.FormUbah.route,
             arguments = listOf(
                 navArgument(KEY_ID_RESEP) { type = NavType.LongType}
             )
-        ){
-                navBackStackEntry ->
+        ) { navBackStackEntry ->
             val id = navBackStackEntry.arguments?.getLong(KEY_ID_RESEP)
             DetailScreen(navController, id)
         }

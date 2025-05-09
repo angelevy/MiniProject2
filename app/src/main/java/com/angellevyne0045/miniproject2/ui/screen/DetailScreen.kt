@@ -81,7 +81,7 @@ fun DetailScreen(navController: NavHostController, id: Long? = null) {
                 },
                 title = {
                     if (id == null)
-                    Text(text = stringResource(R.string.tambah_resep))
+                        Text(text = stringResource(R.string.tambah_resep))
                     else
                         Text(text = stringResource(R.string.edit_resep))
                 },
@@ -141,38 +141,15 @@ fun DetailScreen(navController: NavHostController, id: Long? = null) {
 }
 
 @Composable
-fun DeleteAction(delete: () -> Unit) {
-    var expanded by remember { mutableStateOf(false) }
-
-    IconButton(onClick = { expanded = true }) {
-        Icon(
-            imageVector = Icons.Filled.MoreVert,
-            contentDescription = stringResource(R.string.lainnya),
-            tint = MaterialTheme.colorScheme.primary
-        )
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
-        ) {
-            DropdownMenuItem(
-                text = {
-                    Text(text = stringResource(id = R.string.hapus))
-                },
-                onClick = {
-                    expanded = false
-                    delete()
-                }
-            )
-        }
-    }
-}
-
-@Composable
 fun FormResep(
-    nama: String, onNamaChange: (String) -> Unit,
-    deskripsi: String, onDeskripsiChange: (String) -> Unit,
-    bahan: String, onBahanChange: (String) -> Unit,
-    langkah: String, onLangkahChange: (String) -> Unit,
+    nama: String,
+    onNamaChange: (String) -> Unit,
+    deskripsi: String,
+    onDeskripsiChange: (String) -> Unit,
+    bahan: String,
+    onBahanChange: (String) -> Unit,
+    langkah: String,
+    onLangkahChange: (String) -> Unit,
     modifier: Modifier
 ) {
     Column (
@@ -221,6 +198,31 @@ fun FormResep(
             ),
             modifier = Modifier.fillMaxSize()
         )
+    }
+}
+
+@Composable
+fun DeleteAction(onDeleteClick: () -> Unit) {
+    var expanded by remember { mutableStateOf(false) }
+
+    IconButton(onClick = { expanded = true }) {
+        Icon(
+            imageVector = Icons.Default.MoreVert,
+            contentDescription = stringResource(R.string.lainnya),
+            tint = MaterialTheme.colorScheme.primary
+        )
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            DropdownMenuItem(
+                text = { Text(stringResource(R.string.hapus)) },
+                onClick = {
+                    expanded = false
+                    onDeleteClick()
+                }
+            )
+        }
     }
 }
 

@@ -18,4 +18,7 @@
     <string name="tombol_batal">Batal</string>
     <string name="list">Tampilan list</string>
     <string name="grid">Tampilan grid</string>
+    <string name="recycle_bin">Recycle Bin</string>
+    <string name="hapus_permanen">Hapus Permanen</string>
+    <string name="pulihkan">Pulihkan</string>
 </resources>

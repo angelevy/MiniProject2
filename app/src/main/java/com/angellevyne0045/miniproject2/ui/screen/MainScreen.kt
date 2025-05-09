@@ -27,12 +27,17 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -62,6 +67,13 @@ fun MainScreen(navController: NavHostController) {
     val dataStore = SettingsDataStore(LocalContext.current)
     val showList by dataStore.layoutFlow.collectAsState(true)
 
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+
+    val context = LocalContext.current
+    val factory = ViewModelFactory(context)
+    val viewModel: MainViewModel = viewModel(factory = factory)
+
     Scaffold (
         topBar = {
             TopAppBar(
@@ -90,6 +102,14 @@ fun MainScreen(navController: NavHostController) {
                             tint = MaterialTheme.colorScheme.primary
                         )
                     }
+                    IconButton(onClick = {
+                        navController.navigate(Screen.RecycleBin.route)
+                    }) {
+                        Icon (
+                            painter = painterResource(R.drawable.baseline_delete_24),
+                            contentDescription = "Recycle Bin"
+                        )
+                    }
                 }
             )
         },
@@ -107,12 +127,33 @@ fun MainScreen(navController: NavHostController) {
             }
         }
     ){  innerPadding ->
-        ScreenContent(showList, Modifier.padding(innerPadding), navController)
+        ScreenContent(
+            showList = showList,
+            modifier = Modifier.padding(innerPadding),
+            navController = navController,
+            onDelete = { item ->
+                scope.launch {
+                    viewModel.softDelete(item.id)
+                    val result = snackbarHostState.showSnackbar(
+                        message = "Item dihapus",
+                        actionLabel = "Undo",
+                        duration = SnackbarDuration.Short
+                    )
+                    if (result == SnackbarResult.ActionPerformed) {
+                        viewModel.restore(item.id)
+                        snackbarHostState.showSnackbar(
+                            message = "Item berhasil dipulihkan",
+                            duration = SnackbarDuration.Short
+                        )
+                    }
+                }
+            }
+        )
     }
 }
 
 @Composable
-fun ScreenContent(showList: Boolean, modifier: Modifier = Modifier, navController: NavHostController) {
+fun ScreenContent(showList: Boolean, modifier: Modifier = Modifier, navController: NavHostController, onDelete: (Resep) -> Unit ) {
     val context = LocalContext.current
     val factory = ViewModelFactory(context)
 
@@ -134,11 +175,16 @@ fun ScreenContent(showList: Boolean, modifier: Modifier = Modifier, navControlle
                 modifier = modifier.fillMaxSize(),
                 contentPadding = PaddingValues(bottom = 84.dp)
             ) {
-                items(data) {
-                    ListItem(resep = it) {
-                        navController.navigate(Screen.FormUbah.withId(it.id))
-                    }
-                    HorizontalDivider()
+                items(data) { item ->
+                    ListItem(resep = item, onClick = {
+                        navController.navigate(Screen.FormUbah.withId(item.id))
+                    }, onDelete = { onDelete(item) })
+
+                    HorizontalDivider(
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        thickness = 0.5.dp,
+                        color = MaterialTheme.colorScheme.outline
+                    )
                 }
             }
         }
@@ -151,16 +197,16 @@ fun ScreenContent(showList: Boolean, modifier: Modifier = Modifier, navControlle
                 contentPadding = PaddingValues(8.dp, 8.dp, 8.dp, 84.dp)
             ) {
                 items(data) {
-                    GridItem(resep = it) {
+                    GridItem(resep = it, onClick = {
                         navController.navigate(Screen.FormUbah.withId(it.id))
-                    }
+                    }, onDelete = { onDelete(it) })
                 }
             }
         }
     }
 }
 @Composable
-fun ListItem(resep: Resep, onClick: () -> Unit) {
+fun ListItem(resep: Resep, onClick: () -> Unit, onDelete: () -> Unit) {
     Column(
         modifier = Modifier
             .clickable { onClick() }
@@ -179,23 +225,18 @@ fun ListItem(resep: Resep, onClick: () -> Unit) {
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
-        Text(
-            text = resep.bahan,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
-        )
-        Text(
-            text = resep.langkah,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
-        )
+        IconButton(onClick = onDelete) {
+            Text(text = "Hapus")
+        }
     }
 }
 
 @Composable
-fun GridItem(resep: Resep, onClick: () -> Unit) {
+fun GridItem(resep: Resep, onClick: () -> Unit, onDelete: () -> Unit) {
     Card(
-        modifier = Modifier.fillMaxWidth().clickable { onClick() },
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() },
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface,
         ),
@@ -216,16 +257,9 @@ fun GridItem(resep: Resep, onClick: () -> Unit) {
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
             )
-            Text(
-                text = resep.bahan,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-            Text(
-                text = resep.langkah,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis
-            )
+            IconButton(onClick = onDelete) {
+                Text(text = "Hapus")
+            }
         }
     }
 }

@@ -1,3 +1,4 @@
+
 package com.angellevyne0045.miniproject2.ui.screen
 
 
@@ -41,7 +42,7 @@ class DetailViewModel(private val dao: ResepDao) : ViewModel() {
 
     fun delete(id: Long) {
         viewModelScope.launch ( Dispatchers.IO ) {
-            dao.deleteById(id)
+            dao.softDeleteById(id)
         }
     }
 }

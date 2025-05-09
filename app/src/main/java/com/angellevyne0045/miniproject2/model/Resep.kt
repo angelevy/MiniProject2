@@ -10,5 +10,7 @@ data class Resep(
     val nama: String,
     val deskripsi: String,
     val bahan: String,
-    val langkah: String
+    val langkah: String,
+    val isDelete: Int = 0,
+    val deleteAt: String? = null
 )
